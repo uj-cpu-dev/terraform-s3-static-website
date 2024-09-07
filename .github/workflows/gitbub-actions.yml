@@ -10,6 +10,6 @@ on:
 
 jobs:
   terragrunt-pipeline:
-    uses: terragrunt-pipeline/.github/workflows/ci-cd.yml
+    uses: terragrunt-pipeline/.github/workflows/ci-cd.yml@main
     with:
       working_dir: live/dev/s3
