@@ -13,4 +13,4 @@ jobs:
     uses: uj-cpu-dev/terragrunt-pipeline/.github/workflows/ci-cd.yml@main
     with:
       working_dir: live/dev/s3
-      secrets: inherit
+    secrets: inherit
