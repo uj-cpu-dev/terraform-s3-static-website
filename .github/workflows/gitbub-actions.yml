@@ -1,0 +1,93 @@
+name: 'Terragrunt CI/CD Pipeline'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  tf_version: 1.9.5
+  tg_version: 0.53.2
+  working_dir: live/dev/s3
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Install Terragrunt'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg_version }}/terragrunt_linux_amd64
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/terragrunt
+
+      - name: 'Check Terragrunt configuration'
+        run: terragrunt hclfmt --terragrunt-check --terragrunt-diff
+        working-directory: ${{ env.working_dir }}
+
+  plan:
+    runs-on: ubuntu-latest
+    needs: [ check ]
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Set up Terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.tf_version }}
+          terraform_wrapper: false
+
+      - name: 'Install Terragrunt'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg_version }}/terragrunt_linux_amd64
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/terragrunt
+
+      - name: 'Run Terragrunt plan'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terragrunt plan
+        working-directory: ${{ env.working_dir }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ plan ]
+    environment: dev
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Set up Terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.tf_version }}
+          terraform_wrapper: false
+
+      - name: 'Install Terragrunt'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg_version }}/terragrunt_linux_amd64
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/terragrunt
+
+      - name: 'Run Terragrunt apply'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terragrunt apply -auto-approve
+        working-directory: ${{ env.working_dir }}
