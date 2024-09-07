@@ -36,7 +36,7 @@ jobs:
 
   terragrunt-plan:
     runs-on: ubuntu-latest
-    needs: [ check ]
+    needs: [ terragrunt-project-check ]
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
 
   terragrunt-apply:
     runs-on: ubuntu-latest
-    needs: [ plan ]
+    needs: [ terragrunt-plan ]
     environment: dev
     if: github.ref == 'refs/heads/main'
     steps:
