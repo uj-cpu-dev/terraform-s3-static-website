@@ -13,6 +13,4 @@ jobs:
     uses: uj-cpu-dev/terragrunt-pipeline/.github/workflows/ci-cd.yml@main
     with:
       working_dir: live/dev/s3
-      tf_version: '1.5.7'  # Use the passed input
-      tg_version: '0.53.2'  # Use the passed input
     secrets: inherit
