@@ -1,14 +1,14 @@
-# Get the environment from the child terragrunt.hcl file or fallback to default
+# Explicitly set the environment for this folder (dev in this case)
 locals {
-  environment = get_env("TG_ENVIRONMENT", "dev")  # default to "dev"
+  environment = "dev"
 }
 
-# Include the parent configuration, passing environment as an input
+# Include the parent configuration
 include {
   path = find_in_parent_folders()
 }
 
-# Define inputs to the parent configuration
+# Pass the environment to the parent
 inputs = {
   environment = local.environment
 }
