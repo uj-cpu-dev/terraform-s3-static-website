@@ -1,5 +1,5 @@
 locals {
-  environment = "default"  # Default value in case not passed by the child
+  environment = read_terragrunt_config(find_in_parent_folders("env.hcl"))
 }
 
 # Receive environment as input from child
