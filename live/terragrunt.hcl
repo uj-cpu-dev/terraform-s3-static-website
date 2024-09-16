@@ -1,5 +1,5 @@
 locals {
-  environment = "dev"  # Default value in case not passed by the child
+  environment = "default"  # Default value in case not passed by the child
 }
 
 # Receive environment as input from child
