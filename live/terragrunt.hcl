@@ -1,5 +1,5 @@
 locals {
-  environment = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  environment = read_terragrunt_config("env.hcl")
 }
 
 # Receive environment as input from child
