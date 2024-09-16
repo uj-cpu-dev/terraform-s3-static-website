@@ -1,6 +1,9 @@
-TERRAGRUNT_CMD=terragrunt
-TG_DIR=live/dev/s3
+# Define default values
+TERRAGRUNT_CMD ?= terragrunt
+ENV ?= dev  # Default environment is 'dev' if not set
+TG_DIR ?= live/$(ENV)/s3
 
+# Targets
 plan:
 	$(TERRAGRUNT_CMD) plan --terragrunt-working-dir $(TG_DIR)
 
