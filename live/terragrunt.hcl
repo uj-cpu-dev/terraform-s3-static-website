@@ -4,5 +4,5 @@ locals {
 
 # Receive environment as input from child
 terraform {
-  source = "${get_parent_terragrunt_dir()}/modules/${local.environment}/s3"
+  source = "../modules/${local.environment}/s3"
 }
