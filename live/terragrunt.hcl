@@ -4,5 +4,5 @@ locals {
 
 # Receive environment as input from child
 terraform {
-  source = "../../modules/${local.environment}/s3"
+  source = "../../../modules/${local.environment}/s3"
 }
